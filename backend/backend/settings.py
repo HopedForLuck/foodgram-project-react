@@ -6,7 +6,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', default='secretkey')
 
-DEBUG = os.getenv('DEBUG', 'false').lower() == 'true'
+# DEBUG = os.getenv('DEBUG', 'false').lower() == 'true'
+
+DEBUG = True
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1').split(',')
 
@@ -142,3 +144,5 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
 
 }
+
+TEMPLATES_DIR = BASE_DIR / 'templates'
