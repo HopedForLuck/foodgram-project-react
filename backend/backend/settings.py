@@ -10,7 +10,8 @@ SECRET_KEY = os.getenv('SECRET_KEY', default='secretkey')
 
 DEBUG = True
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1').split(',')
+# ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1').split(',')
+ALLOWED_HOSTS = ['hopedforluck.sytes.net', '127.0.0.1', '51.250.105.16', 'localhost']
 
 
 # Application definition
