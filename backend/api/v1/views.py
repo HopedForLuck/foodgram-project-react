@@ -6,18 +6,20 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.decorators import action
-
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, SAFE_METHODS, IsAuthenticated
+from rest_framework.permissions import (
+    IsAuthenticatedOrReadOnly, SAFE_METHODS, IsAuthenticated)
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
-from recipes.models import Recipe, Tag, Ingredient, Favorite, ShoppingCart, IngredientRecipe
+from recipes.models import (Recipe, Tag, Ingredient,
+                            Favorite, ShoppingCart, IngredientRecipe)
+from .filters import IngredientFilter, RecipeFilter
 from .pagination import CustomLimitPagination
 from .permissions import IsOwnerOrReadOnly
-from .serializers import (RecipeListSerializer, RecipeCreateUpdateSerializer,
-                          IngredientSerializer, TagSerializer, RecipeBaseSerializer)
-from .filters import IngredientFilter, RecipeFilter
+from .serializers import (
+    RecipeListSerializer, RecipeCreateUpdateSerializer,
+    IngredientSerializer, TagSerializer, RecipeBaseSerializer)
 
 
 class TagViewSet(ReadOnlyModelViewSet):

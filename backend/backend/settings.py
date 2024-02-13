@@ -92,7 +92,6 @@ DATABASES = {
     }
 }
 
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -143,7 +142,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
 
-    'DEFAULT_PAGINATION_CLASS': 'api.v1.pagination.PageNumberPaginationDataOnly',
+    'DEFAULT_PAGINATION_CLASS': [
+        'api.v1.pagination.PageNumberPaginationDataOnly',
+    ],
     'PAGE_SIZE': 10,
 
 }

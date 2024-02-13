@@ -1,8 +1,8 @@
+from colorfield.fields import ColorField
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 from django.db.models import UniqueConstraint
-from colorfield.fields import ColorField
 
 User = get_user_model()
 
@@ -77,7 +77,10 @@ class Recipe(models.Model):
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Минут до готовности',
         validators=[
-            MinValueValidator(1, "Время на готовку не может составлять меньше минуты"),
+            MinValueValidator(
+                1,
+                "Время на готовку не может составлять меньше минуты",
+            ),
         ],
     )
     text = models.TextField(
@@ -178,7 +181,10 @@ class ShoppingCart(models.Model):
         verbose_name = 'Корзина покупок'
         verbose_name_plural = 'Корзины покупок'
         constraints = [
-            UniqueConstraint(fields=['user', 'recipe'], name='unique_shopping_cart')
+            UniqueConstraint(
+                fields=['user', 'recipe'],
+                name='unique_shopping_cart',
+            )
         ]
 
     def __str__(self):

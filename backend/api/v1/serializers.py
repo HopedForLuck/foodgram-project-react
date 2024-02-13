@@ -6,11 +6,12 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
-from recipes.models import Ingredient, IngredientRecipe, Recipe, Tag, ShoppingCart, Favorite
-from users.models import Subscribe
 from rest_framework.fields import IntegerField, SerializerMethodField
 from rest_framework.validators import UniqueTogetherValidator
 
+from recipes.models import (Ingredient, IngredientRecipe,
+                            Recipe, Tag, ShoppingCart, Favorite)
+from users.models import Subscribe
 
 User = get_user_model()
 
@@ -268,21 +269,26 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         tags = self.initial_data.get('tags')
         image = self.initial_data.get('image')
         if not ingredients:
-            raise serializers.ValidationError('Выберите хотя бы один ингредиент')
+            raise serializers.ValidationError('Выберите ингредиент')
         if not tags:
-            raise serializers.ValidationError('Выберите хотя бы один тэг')
+            raise serializers.ValidationError('Выберите тэг')
         if not image:
             raise serializers.ValidationError('Добавьте картинку к рецепту')
 
         ingredient_list = []
         for ingredient_item in ingredients:
-            ingredient = get_object_or_404(Ingredient, id=ingredient_item['id'])
+            ingredient = get_object_or_404(
+                Ingredient,
+                id=ingredient_item['id'],
+            )
             if ingredient in ingredient_list:
-                raise serializers.ValidationError('Ингредиенты не могут повторяться')
+                raise serializers.ValidationError(
+                    'Ингредиенты не могут повторяться')
 
             ingredient_list.append(ingredient)
             if int(ingredient_item['amount']) < 0:
-                raise serializers.ValidationError('Количество ингредиента не может равняться нулю')
+                raise serializers.ValidationError(
+                    'Количество ингредиента не может равняться нулю')
 
         tag_list = []
         for tag in tags:
@@ -369,4 +375,3 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
             'is_in_shopping_cart',
             'is_favorited',
         )
-

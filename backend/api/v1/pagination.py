@@ -10,4 +10,3 @@ class PageNumberPaginationDataOnly(PageNumberPagination):
 
 class CustomLimitPagination(PageNumberPagination):
     page_size_query_param = 'limit'
-
