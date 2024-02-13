@@ -42,4 +42,4 @@ services:
       - media_fg:/media/
 
     ports:
-      - "80:80"
+      - "8000:80"
