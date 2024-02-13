@@ -4,7 +4,7 @@ from django.core.validators import RegexValidator
 from django.db.models import UniqueConstraint
 
 LENGTH_EMAIL = 256
-LENGTH_USERNAME = 150
+LENGTH_NAME = 150
 LENGTH_ROLE = 16
 LENGTH_CODE = 36
 
@@ -12,24 +12,25 @@ LENGTH_CODE = 36
 class User(AbstractUser):
     """Custom User model."""
 
-    ADMIN = "admin"
-    MODERATOR = "moderator"
-    USER = "user"
-    ROLE = [
-        (ADMIN, "Администратор"),
-        (MODERATOR, "Модератор"),
-        (USER, "Пользователь")
-    ]
-
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [
         'username',
-        'password',
+        'first_name',
+        'last_name',
     ]
-
+    first_name = models.CharField(
+        verbose_name='Имя',
+        max_length=LENGTH_NAME,
+        blank=False,
+    )
+    last_name = models.CharField(
+        verbose_name='Фамилия',
+        max_length=LENGTH_NAME,
+        blank=False,
+    )
     username = models.CharField(
-        max_length=LENGTH_USERNAME,
-        verbose_name='Имя пользователя',
+        max_length=LENGTH_NAME,
+        verbose_name='Логин',
         unique=True,
         db_index=True,
         error_messages={
@@ -52,30 +53,12 @@ class User(AbstractUser):
         blank=True,
         verbose_name="О пользователе",
     )
-    role = models.CharField(
-        max_length=LENGTH_ROLE,
-        choices=ROLE,
-        default=USER,
-        verbose_name="Роль пользователя",
-    )
     confirmation_code = models.CharField(
         max_length=LENGTH_CODE,
         null=True,
         blank=True,
-        verbose_name="Код потдверждения",
+        verbose_name="Код подтверждения",
     )
-
-    @property
-    def is_user(self):
-        return self.role == self.USER
-
-    @property
-    def is_admin(self):
-        return self.role == self.ADMIN
-
-    @property
-    def is_moderator(self):
-        return self.role == self.MODERATOR
 
     class Meta:
         ordering = ('id', )
@@ -90,13 +73,13 @@ class Subscribe(models.Model):
     )
     author = models.ForeignKey(
         User,
-        related_name='subscribe_to',
-        verbose_name="Автор рецепта",
+        related_name='subscribing',
+        verbose_name="Пользователь",
         on_delete=models.CASCADE,
     )
 
     class Meta:
-        ordering = ('id', )
+        ordering = ('-id', )
         constraints = [
             UniqueConstraint(fields=['user', 'author'], name='unique_subscription')
         ]

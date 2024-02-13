@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import User
+from .models import User, Subscribe
 
 
 @admin.register(User)
@@ -10,10 +10,15 @@ class UserAdmin(UserAdmin):
         'username',
         'email',
         'bio',
-        'role',
+        'first_name',
+        'last_name',
     )
     list_filter = (
         'email',
         'username',
-        'role',
     )
+
+
+@admin.register(Subscribe)
+class SubscribeAdmin(admin.ModelAdmin):
+    list_display = ('user', 'author',)

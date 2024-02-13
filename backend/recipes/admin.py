@@ -1,6 +1,9 @@
 from django.contrib import admin
 
-from .models import Recipe, Ingredient, Tag, Favorite
+from .models import (
+    Recipe, Ingredient, Tag,
+    Favorite, ShoppingCart,
+)
 
 
 @admin.register(Recipe)
@@ -18,6 +21,8 @@ class RecipeAdmin(admin.ModelAdmin):
     list_display_links = ("name",)
     readonly_fields = ('in_favorites',)
 
+    admin.site.empty_value_display = "Не задано"
+
     @admin.display(description='Добавили в избранное')
     def in_favorites(self, obj):
         return obj.favorites.count()
@@ -27,11 +32,13 @@ class RecipeAdmin(admin.ModelAdmin):
 class IngredientAdmin(admin.ModelAdmin):
     list_display = (
         "name",
-        "unit",
+        "measurement_unit",
     )
     search_fields = ("name",)
     list_filter = ("name",)
     list_display_links = ("name",)
+
+    admin.site.empty_value_display = "Не задано"
 
 
 @admin.register(Tag)
@@ -44,10 +51,18 @@ class TagAdmin(admin.ModelAdmin):
     list_filter = ("name",)
     list_display_links = ("name",)
 
+    admin.site.empty_value_display = "Не задано"
 
-admin.site.empty_value_display = "Не задано"
+
+@admin.register(ShoppingCart)
+class ShoppingCartAdmin(admin.ModelAdmin):
+    list_display = ('user', 'recipe',)
+
+    admin.site.empty_value_display = "Не задано"
 
 
 @admin.register(Favorite)
 class FavouriteAdmin(admin.ModelAdmin):
     list_display = ('user', 'recipe',)
+
+    admin.site.empty_value_display = "Не задано"
