@@ -10,14 +10,14 @@ services:
 
   db:
     image: postgres:13.10
-    env_file: ../.env
+    env_file: .env
     restart: always
     volumes:
       - pg_data_foodgram:/var/lib/postgresql/data
 
   backend:
     image: hopedforluck/foodgram_backend
-    env_file: ../.env
+    env_file: .env
     restart: always
     depends_on:
       - db
@@ -32,7 +32,7 @@ services:
 
   nginx:
     image: nginx:1.19.3
-    env_file: ../.env
+    env_file: .env
     restart: always
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
