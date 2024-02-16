@@ -13,7 +13,7 @@ from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from recipes.models import (Recipe, Tag, Ingredient,
-                            IngredientRecipe)
+                            IngredientRecipe, ShoppingCart, Favorite)
 from .filters import IngredientFilter, RecipeFilter
 from .pagination import CustomLimitPagination, PageNumberPaginationDataOnly
 from .permissions import IsOwnerOrReadOnly
@@ -69,6 +69,28 @@ class RecipesViewSet(ModelViewSet):
         return Response({
             'errors': 'Рецепт уже удален'
         }, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(
+        detail=True,
+        methods=['post', 'delete'],
+        permission_classes=[IsAuthenticated]
+    )
+    def favorite(self, request, pk):
+        if request.method == 'POST':
+            return self.add_obj(Favorite, request.user, pk)
+        else:
+            return self.delete_obj(Favorite, request.user, pk)
+
+    @action(
+        detail=True,
+        methods=['post', 'delete'],
+        permission_classes=[IsAuthenticated]
+    )
+    def shopping_cart(self, request, pk):
+        if request.method == 'POST':
+            return self.add_obj(ShoppingCart, request.user, pk)
+        else:
+            return self.delete_obj(ShoppingCart, request.user, pk)
 
     @action(
         detail=False,

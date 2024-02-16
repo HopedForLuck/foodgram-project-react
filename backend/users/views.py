@@ -7,9 +7,9 @@ from rest_framework.permissions import (
     IsAuthenticated, IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 
-from api.v1.pagination import CustomLimitPagination
-from api.v1.permissions import IsOwnerOrReadOnly
-from api.v1.serializers import CustomUserSerializer, SubscribeSerializer
+from api.pagination import CustomLimitPagination
+from api.permissions import IsOwnerOrReadOnly
+from api.serializers import CustomUserSerializer, SubscribeSerializer
 from .models import Subscribe
 
 User = get_user_model()
@@ -22,7 +22,7 @@ class CustomUserViewSet(UserViewSet):
     permission_classes = (IsOwnerOrReadOnly, IsAuthenticatedOrReadOnly)
 
     def get_permissions(self):
-        if self.request.path == '/api/v1/users/me/':
+        if self.request.path == '/api/users/me/':
             return IsAuthenticated(),
         return super().get_permissions()
 

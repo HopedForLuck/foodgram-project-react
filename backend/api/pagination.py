@@ -4,6 +4,7 @@ from typing_extensions import OrderedDict
 
 
 class PageNumberPaginationDataOnly(PageNumberPagination):
+    page_size_query_param = 'limit'
 
     def get_paginated_response(self, data):
         return Response(data)
