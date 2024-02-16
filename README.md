@@ -100,4 +100,4 @@ ____
 ##### Чурилов Александр - [https://github.com/HopedForLuck]
 
 [1]: https://www.postman.com/
-[2]: ./postman_collection/
+[2]: /postman_collection/
