@@ -5,6 +5,8 @@ volumes:
   pg_data_fg:
   static_fg:
   media_fg:
+  frontend_fg:
+  docs_fg:
 
 services:
 
@@ -22,24 +24,27 @@ services:
     depends_on:
       - db
     volumes:
-      - static_fg:/backend_static
-      - media_fg:/backend_media
+      - static_fg:/app/static/
+      - media_fg:/app/media/
 
   frontend:
     image: hopedforluck/foodgram_frontend
     volumes:
-      - ../frontend/:/app/result_build/
+      - frontend_fg:/app/result_build/
 
   nginx:
     image: nginx:1.19.3
     env_file: .env
-    restart: always
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - ../frontend/build:/usr/share/nginx/html/
-      - ../docs/:/usr/share/nginx/html/api/docs/
+      - frontend_fg:/usr/share/nginx/html/
+      - docs_fg:/usr/share/nginx/html/api/docs/
       - static_fg:/var/html/static/
       - media_fg:/var/html/media/
+    depends_on:
+      - db
+      - backend
+      - frontend
 
     ports:
       - "8000:80"

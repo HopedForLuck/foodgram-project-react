@@ -49,20 +49,6 @@ class CustomUserSerializer(UserCreateSerializer):
         return Subscribe.objects.filter(user=user, author=obj).exists()
 
 
-# class CustomCreateUserSerializer(UserCreateSerializer):
-#
-#     class Meta:
-#         model = User
-#         fields = (
-#             'email',
-#             'id',
-#             'username',
-#             'first_name',
-#             'last_name',
-#             'password',
-#         )
-
-
 class SubscribeSerializer(CustomUserSerializer):
     recipes_count = SerializerMethodField()
     recipes = RecipeBaseSerializer(many=True, read_only=True)
@@ -118,71 +104,6 @@ class SubscribeSerializer(CustomUserSerializer):
             recipes = recipes[:int(limit)]
         serializer = RecipeBaseSerializer(recipes, many=True, read_only=True)
         return serializer.data
-
-
-# class FavoriteRecipeSerializer(serializers.ModelSerializer):
-#
-#     id = serializers.IntegerField()
-#     name = serializers.CharField()
-#     image = Base64ImageField(
-#         max_length=None,
-#         use_url=False,
-#     )
-#     cooking_time = serializers.IntegerField()
-#
-#     class Meta:
-#         model = Favorite
-#         fields = ['id', 'name', 'image', 'cooking_time']
-#         validators = UniqueTogetherValidator(
-#             queryset=Favorite.objects.all(), fields=('user', 'recipe')
-#         )
-#
-#     def validate(self, data):
-#         request = self.context['request']
-#         user = request.user
-#         if request.method == 'POST':
-#             recipe = self.context['recipe']
-#             if user.favorites.filter(recipe=recipe).exists():
-#                 raise serializers.ValidationError(
-#                     message='Рецепт уже в избранном.'
-#                 )
-#
-#     def create(self, validated_data):
-#         return Favorite.objects.create(**validated_data).recipe
-
-
-# class ShoppingCartSerializer(serializers.ModelSerializer):
-#
-#     def validate(self, data):
-#         tags = self.initial_data.get('tags')
-#         if not tags:
-#             raise serializers.ValidationError('Выберите тэг')
-#
-#         tag_list = []
-#         for tag in tags:
-#             if tag in tag_list:
-#                 raise serializers.ValidationError(
-#                 'Тэги не могут повторяться'
-#                 )
-#             tag_list.append(tag)
-#
-#         tags_exist = Tag.objects.filter(id__in=tags)
-#         if len(tags_exist) != len(tags):
-#             raise ValidationError('Указан несуществующий тэг')
-#
-#         data['tags'] = tags
-#         return data
-#
-#     class Meta:
-#         model = ShoppingCart
-#         fields = ('recipe', 'user')
-#         validators = [
-#             UniqueTogetherValidator(
-#                 queryset=ShoppingCart.objects.all(),
-#                 fields=('recipe', 'user'),
-#                 message='Рецепт уже добавлен'
-#             )
-#         ]
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -298,12 +219,9 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         ingredients = self.initial_data.get('ingredients')
         tags = self.initial_data.get('tags')
         image = self.initial_data.get('image')
-        if not ingredients:
-            raise serializers.ValidationError('Выберите ингредиент')
-        if not tags:
-            raise serializers.ValidationError('Выберите тэг')
-        if not image:
-            raise serializers.ValidationError('Добавьте картинку к рецепту')
+        if not ingredients or not tags or not image:
+            raise serializers.ValidationError(
+                'Выберите ингредиент, тэг или добавьте картинку')
 
         tag_list = []
         for tag in tags:
